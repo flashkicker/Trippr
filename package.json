@@ -1,31 +1,32 @@
 {
-  "name": "trippr",
-  "version": "0.1.0",
-  "private": true,
-  "dependencies": {
-    "react": "^16.8.6",
-    "react-dom": "^16.8.6",
-    "react-scripts": "3.0.1"
-  },
-  "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
-  },
-  "eslintConfig": {
-    "extends": "react-app"
-  },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
-  }
+	"name": "emaily",
+	"version": "1.0.0",
+	"description": "",
+	"main": "index.js",
+	"scripts": {
+		"start": "node index.js",
+		"server": "nodemon index.js",
+		"client": "npm run start --prefix client",
+		"dev": "concurrently \"npm run server\" \"npm run client\""
+	},
+	"engines": {
+		"node": "8.7.0",
+		"npm": "5.4.2"
+	},
+	"keywords": [],
+	"author": "",
+	"license": "ISC",
+	"dependencies": {
+		"@google/maps": "^0.5.5",
+		"concurrently": "^3.5.1",
+		"cookie-session": "^2.0.0-beta.3",
+		"express": "^4.16.3",
+		"materialize-css": "^1.0.0-rc.2",
+		"mongoose": "^5.5.10",
+		"passport": "^0.4.0",
+		"passport-google-oauth20": "^1.0.0"
+	},
+	"devDependencies": {
+		"forever": "^0.15.3"
+	}
 }
