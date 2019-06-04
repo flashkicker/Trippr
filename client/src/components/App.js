@@ -5,12 +5,13 @@ import { ToastContainer } from "react-toastify"
 
 import * as actions from "../actions"
 import Header from "./Header"
-import ListOfTrips from "./ListOfTrips"
 import CreateTrip from "./CreateTrip"
 import SavedTrips from "./SavedTrips"
 import EditTrip from "./EditTrip"
 import DeleteTrip from "./DeleteTrip"
 import ShowTrip from "./ShowTrip"
+import MyTrips from "./MyTrips"
+import ExploreTrips from './ExploreTrips'
 import history from "../history"
 
 class App extends Component {
@@ -24,12 +25,13 @@ class App extends Component {
 				<Router history={history}>
 					<div>
 						<Header />
-						<Route path="/" exact component={ListOfTrips} onChange={actions.fetchTrips} />
+						<Route path="/" exact component={ExploreTrips} onChange={actions.fetchTrips} />
 						<Route path="/trips/new" exact component={CreateTrip} />
 						<Route path="/trips/saved" exact component={SavedTrips} />
 						<Route path="/trips/edit/:id" exact component={EditTrip} />
 						<Route path="/trips/delete/:id" exact component={DeleteTrip} />
 						<Route path="/trips/show/:id" exact component={ShowTrip} />   
+						<Route path="/trips/my" exact component={MyTrips} />
 					</div>
 				</Router>
 				<ToastContainer />

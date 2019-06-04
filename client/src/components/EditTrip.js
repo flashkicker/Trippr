@@ -1,6 +1,5 @@
 import React, { Component } from "react"
 import { connect } from "react-redux"
-import _ from "lodash"
 
 import { fetchTrip, editTrip } from "../actions"
 import TripForm from "./TripForm"
@@ -23,6 +22,25 @@ class EditTrip extends Component {
 		})
 	}
 
+	parseInitialValues = () => {
+		const { title, stops, numberOfStops } = this.props.trip
+		
+		let initialValues = {
+			title,
+			numberOfStops,
+			origin: stops[0].place,
+			destination: stops[stops.length - 1].place
+		}
+
+		if (stops.length > 2) {
+			for (let i = 1; i < stops.length - 1; i++) {
+				initialValues[`stop${i}`] = stops[i].place
+			}
+		}
+
+		return initialValues
+	}
+
 	render() {
 		if (!this.props.trip) {
 			return <div>Loading...</div>
@@ -33,7 +51,7 @@ class EditTrip extends Component {
 				<h1 className="header item" style={{ marginBottom: 40 }}>
 					{`Editing Trip: ${this.props.trip.title}`}
 					<TripForm
-						initialValues={_.pick(this.props.trip, "title")}
+						initialValues={this.parseInitialValues()}
 						onSubmit={this.onSubmit}
 					/>
 				</h1>

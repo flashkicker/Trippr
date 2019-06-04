@@ -6,9 +6,18 @@ import { createTrip } from "../actions"
 
 class CreateTrip extends Component {
 	onSubmit = formValues => {
-        this.props.createTrip(formValues)
-	}	
-	
+		const stops = []
+		
+		for (let i = 1; i <= this.props.numberOfStops; i++) {
+			stops.push(formValues[`stop${i}`])
+		}
+
+		this.props.createTrip({
+			...formValues,
+			stops
+		})
+	}
+
 	render() {
 		return (
 			<div>
@@ -19,8 +28,14 @@ class CreateTrip extends Component {
 	}
 }
 
+const mapStateToProps = (state) => {
+	return {
+		numberOfStops: state.numberOfStops
+	}
+}
+
 export default connect(
-	null,
+	mapStateToProps,
 	{
 		createTrip
 	}

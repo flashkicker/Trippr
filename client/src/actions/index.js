@@ -8,7 +8,8 @@ import {
 	EDIT_TRIP,
 	DELETE_TRIP,
 	GET_PREDICTIONS,
-	GET_NUMBER_OF_STOPS
+	GET_NUMBER_OF_STOPS,
+	FETCH_MY_TRIPS
 } from "./types"
 
 export const fetchUser = () => {
@@ -80,10 +81,10 @@ export const deleteTrip = id => {
 	}
 }
 
-export const getPlacesSuggestions = (formValues) => {
-	return async (dispatch) => {
+export const getPlacesSuggestions = formValues => {
+	return async dispatch => {
 		const response = await axios.post("/api/maps", formValues)
-		
+
 		dispatch({
 			type: GET_PREDICTIONS,
 			payload: response.data
@@ -91,12 +92,20 @@ export const getPlacesSuggestions = (formValues) => {
 	}
 }
 
-export const getNumberOfStops = (numberOfStops) => {
+export const getNumberOfStops = numberOfStops => {
 	return {
 		type: GET_NUMBER_OF_STOPS,
 		payload: numberOfStops
 	}
 }
 
-
-
+export const fetchMyTrips = () => {
+	return async dispatch => {
+		const response = await axios.get("/api/mytrips")
+		console.log(response.data)
+		dispatch({
+			type: FETCH_MY_TRIPS,
+			payload: response.data
+		})
+	}
+}

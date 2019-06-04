@@ -42,6 +42,9 @@ class Header extends Component {
 						<Link to="/trips/saved" className="item">
 							View Saved
 						</Link>
+						<Link to="/trips/my" className="item">
+							My Trips
+						</Link>
 					</div>
 				)
 		}

@@ -17,7 +17,7 @@ class TripForm extends Component {
 		const { error, touched } = errorProps
 		if (touched && error) {
 			return (
-				<div className="ui error message">
+				<div className="ui pointing red basic label">
 					<div className="header">{error}</div>
 				</div>
 			)
@@ -133,6 +133,8 @@ class TripForm extends Component {
 
 	renderStopsList = () => {
 		const { stopsList } = this.state
+		// TODO render stop fields when editing
+		console.log(this.props.initialValues)
 		if (stopsList) {
 			this.props.getNumberOfStops(stopsList.length)
 			return <div>{this.state.stopsList.map(field => field)}</div>
@@ -196,9 +198,10 @@ const validate = formValues => {
 
 const mapStateToProps = state => {
 	const predictions = []
+
 	state.predictions.map((prediction) => {
 		const { description, place_id } = prediction
-		predictions.push({
+		return predictions.push({
 			description,
 			place_id
 		})

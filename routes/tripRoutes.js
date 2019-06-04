@@ -1,18 +1,22 @@
 const mongoose = require("mongoose")
 const Trip = mongoose.model("trips")
 
+const key = require("../config/keys").googleMapsKey
 const googleMapsClient = require("@google/maps").createClient({
-	key: "AIzaSyAZn7wclMHXGAiymldyKJn1qAdDM84vk5A",
+	key,
 	Promise: Promise
 })
 
 module.exports = app => {
 	app.post("/api/trips", async (req, res) => {
 		const { title } = req.body
-
+		const stops = await extractStopsFromBody(req.body)
+		
 		const trip = new Trip({
 			title,
-			_user: req.user.id
+			_user: req.user.id,
+			stops,
+			numberOfStops: stops.length - 2
 		})
 
 		await trip.save()
@@ -26,6 +30,12 @@ module.exports = app => {
 		res.send(trips)
 	})
 
+	app.get("/api/mytrips", async (req, res) => {
+		const trips = await Trip.find({ _user: req.user.id })
+		
+		res.send(trips)
+	})
+
 	app.get("/api/trip", async (req, res) => {
 		const trip = await Trip.find({ _id: req.query.id })
 
@@ -33,24 +43,17 @@ module.exports = app => {
 	})
 
 	app.patch("/api/trip", async (req, res) => {
-		const { title, origin, destination, stops } = req.body
+		const { title } = req.body
 		const _id = req.query.id
-
-		let places = [origin]
-
-		stops.forEach((stop) => { places.push(stop) })
-
-		places.push(destination)
-
-		places = await mapPlacesToCoordinates(places)
-
-		console.log(places)
+		const stops = await extractStopsFromBody(req.body)
 
 		if (mongoose.Types.ObjectId.isValid(_id)) {
 			const updatedTrip = await Trip.findOneAndUpdate(
 				{
 					_id,
-					_user: req.user.id
+					_user: req.user.id,
+					stops,
+					numberOfStops: stops.length - 2
 				},
 				{ $set: { title } },
 				{ new: true }
@@ -85,7 +88,7 @@ const getCoordinates = async query => {
 	return { lat, lng }
 }
 
-const mapPlacesToCoordinates = async (places) => {
+const mapPlacesToCoordinates = async places => {
 	let map = []
 
 	for (const place of places) {
@@ -95,6 +98,22 @@ const mapPlacesToCoordinates = async (places) => {
 			coordinates
 		})
 	}
-	
+
 	return map
+}
+
+const extractStopsFromBody = async body => {
+	const { origin, destination, stops } = body
+
+	let places = [origin]
+
+	if (stops.length) {
+		stops.forEach(stop => {
+			places.push(stop)
+		})
+	}
+
+	places.push(destination)
+
+	return await mapPlacesToCoordinates(places)
 }

@@ -4,7 +4,8 @@ import {
 	FETCH_TRIP,
 	FETCH_TRIPS,
 	EDIT_TRIP,
-	DELETE_TRIP
+	DELETE_TRIP,
+	FETCH_MY_TRIPS
 } from "../actions/types"
 
 export default (state = {}, action) => {
@@ -19,6 +20,8 @@ export default (state = {}, action) => {
 			return _.omit(state, action.payload)
 		case FETCH_TRIPS:
 			return { ...state, ..._.mapKeys(action.payload, "_id") }
+		case FETCH_MY_TRIPS:
+			return { ..._.mapKeys(action.payload, "_id") }
 		default:
 			return state
 	}

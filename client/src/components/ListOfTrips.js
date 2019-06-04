@@ -1,70 +1,41 @@
 import React, { Component } from "react"
 import { connect } from "react-redux"
-import { Link } from "react-router-dom"
-import { fetchTrips } from "../actions"
+
+import TripCard from "./TripCard"
 
 class ListOfTrips extends Component {
-	componentDidMount() {
-		this.props.fetchTrips()
-	}
-
-	renderEditAndDeleteButtons = trip => {
-		if (trip._user === this.props.currentUserId) {
-			return (
-				<div className="right floated content">
-					<Link to={`/trips/edit/${trip._id}`} className="ui button primary">
-						Edit
-					</Link>
-					<Link to={`/trips/delete/${trip._id}`} className="ui button negative">
-						Delete
-					</Link>
-				</div>
-			)
+	filterList = (trips) => {
+		if (this.props.renderEditAndDeleteButtons) {
+			return trips.filter((trip) => {
+				return trip._user === this.props.currentUserId
+			})
 		}
+
+		return trips
 	}
 
 	renderList = () => {
-		return this.props.trips.map(trip => {
+		const trips = this.filterList(this.props.trips)
+
+		return trips.map(trip => {
 			return (
-				<div
-					className="item"
-					key={trip._id}
-					style={{ padding: 10, minHeight: 70 }}
-				>
-					{this.renderEditAndDeleteButtons(trip)}
-					<i className="large middle aligned icon car" />
-					<div className="content">
-						<Link to={`/trips/show/${trip._id}`}>
-							<h3 className="header item">{trip.title}</h3>
-						</Link>
-					</div>
-				</div>
+				<TripCard
+					trip={trip}
+					renderEditAndDeleteButtons={this.props.renderEditAndDeleteButtons}
+				/>
 			)
 		})
 	}
 
 	render() {
-		return (
-			<div>
-				<h1 className="header item" style={{ marginBottom: 40 }}>
-					Road Trips
-				</h1>
-				<div className="ui big celled list">{this.renderList()}</div>
-			</div>
-		)
+		return <div className="ui two cards">{this.renderList()}</div>
 	}
 }
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
 	return {
-		trips: Object.values(state.trips),
 		currentUserId: state.auth._id
 	}
 }
 
-export default connect(
-	mapStateToProps,
-	{
-		fetchTrips
-	}
-)(ListOfTrips)
+export default connect(mapStateToProps)(ListOfTrips)

@@ -1,6 +1,6 @@
-const key = require("../config/keys").googleMapsClient
+const key = require("../config/keys").googleMapsKey
 const googleMapsClient = require("@google/maps").createClient({
-	key: "AIzaSyAZn7wclMHXGAiymldyKJn1qAdDM84vk5A",
+	key,
 	Promise: Promise
 })
 
