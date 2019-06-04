@@ -1,5 +1,6 @@
 const mongoose = require("mongoose")
 const Trip = mongoose.model("trips")
+const User = mongoose.model("users")
 
 const key = require("../config/keys").googleMapsKey
 const googleMapsClient = require("@google/maps").createClient({
@@ -11,7 +12,7 @@ module.exports = app => {
 	app.post("/api/trips", async (req, res) => {
 		const { title } = req.body
 		const stops = await extractStopsFromBody(req.body)
-		
+
 		const trip = new Trip({
 			title,
 			_user: req.user.id,
@@ -50,12 +51,9 @@ module.exports = app => {
 		if (mongoose.Types.ObjectId.isValid(_id)) {
 			const updatedTrip = await Trip.findOneAndUpdate(
 				{
-					_id,
-					_user: req.user.id,
-					stops,
-					numberOfStops: stops.length - 2
+					_id
 				},
-				{ $set: { title } },
+				{ $set: { title, stops, numberOfStops: stops.length - 2 } },
 				{ new: true }
 			)
 
@@ -73,6 +71,46 @@ module.exports = app => {
 
 			res.sendStatus(200)
 		}
+	})
+
+	app.post("/api/savetrip", async (req, res) => {
+		const _id = req.query.id
+
+		if (mongoose.Types.ObjectId.isValid(_id)) {
+			await User.findOneAndUpdate(
+				{
+					_id: req.user._id
+				},
+				{ $push: { savedTrips: _id } },
+				{ new: true }
+			)
+		}
+
+		res.sendStatus(200)
+	})
+
+	app.post("/api/unsavetrip", async (req, res) => {
+		const _id = req.query.id
+
+		if (mongoose.Types.ObjectId.isValid(_id)) {
+			await User.findOneAndUpdate(
+				{
+					_id: req.user._id
+				},
+				{ $pull: { savedTrips: _id } },
+				{ new: true }
+			)
+		}
+
+		res.sendStatus(200)
+	})
+
+	app.get("/api/savedtrips", async (req, res) => {
+		const trips = await User.find({
+			_id: req.user._id
+		})
+
+		res.send(trips[0].savedTrips)
 	})
 }
 

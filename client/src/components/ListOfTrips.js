@@ -4,9 +4,9 @@ import { connect } from "react-redux"
 import TripCard from "./TripCard"
 
 class ListOfTrips extends Component {
-	filterList = (trips) => {
+	filterList = trips => {
 		if (this.props.renderEditAndDeleteButtons) {
-			return trips.filter((trip) => {
+			return trips.filter(trip => {
 				return trip._user === this.props.currentUserId
 			})
 		}
@@ -16,10 +16,12 @@ class ListOfTrips extends Component {
 
 	renderList = () => {
 		const trips = this.filterList(this.props.trips)
-
+		// console.log(trips)
+		// console.log(this.props.trip)
 		return trips.map(trip => {
 			return (
 				<TripCard
+					key={trip._id}
 					trip={trip}
 					renderEditAndDeleteButtons={this.props.renderEditAndDeleteButtons}
 				/>
@@ -32,7 +34,7 @@ class ListOfTrips extends Component {
 	}
 }
 
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
 	return {
 		currentUserId: state.auth._id
 	}

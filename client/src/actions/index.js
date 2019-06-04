@@ -9,7 +9,10 @@ import {
 	DELETE_TRIP,
 	GET_PREDICTIONS,
 	GET_NUMBER_OF_STOPS,
-	FETCH_MY_TRIPS
+	FETCH_MY_TRIPS,
+	SAVE_TRIP,
+	UNSAVE_TRIP,
+	FETCH_SAVED_TRIPS
 } from "./types"
 
 export const fetchUser = () => {
@@ -102,9 +105,42 @@ export const getNumberOfStops = numberOfStops => {
 export const fetchMyTrips = () => {
 	return async dispatch => {
 		const response = await axios.get("/api/mytrips")
-		console.log(response.data)
+
 		dispatch({
 			type: FETCH_MY_TRIPS,
+			payload: response.data
+		})
+	}
+}
+
+export const saveTrip = id => {
+	return async dispatch => {
+		await axios.post(`/api/savetrip/?id=${id}`)
+
+		dispatch({
+			type: SAVE_TRIP,
+			payload: id
+		})
+	}
+}
+
+export const unsaveTrip = (id) => {
+	return async (dispatch) => {
+		await axios.post(`/api/unsavetrip?id=${id}`)
+
+		dispatch({
+			type: UNSAVE_TRIP,
+			payload: id
+		})
+	}
+}
+
+export const fetchSavedTrips = () => {
+	return async dispatch => {
+		const response = await axios.get("/api/savedtrips")
+		
+		dispatch({
+			type: FETCH_SAVED_TRIPS,
 			payload: response.data
 		})
 	}

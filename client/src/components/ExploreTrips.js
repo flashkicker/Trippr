@@ -7,7 +7,7 @@ import ListOfTrips from "./ListOfTrips"
 class ExploreTrips extends Component {
 	componentDidMount() {
 		this.props.fetchTrips()
-    }
+	}
 
 	render() {
 		return (
@@ -15,7 +15,10 @@ class ExploreTrips extends Component {
 				<h1 className="header item" style={{ marginBottom: 40 }}>
 					Explore Road Trips
 				</h1>
-                <ListOfTrips trips={this.props.trips} renderEditAndDeleteButtons={false} />
+				<ListOfTrips
+					trips={this.props.trips}
+					renderEditAndDeleteButtons={false}
+				/>
 			</div>
 		)
 	}

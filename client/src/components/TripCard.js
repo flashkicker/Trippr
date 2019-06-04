@@ -3,9 +3,40 @@ import { Link } from "react-router-dom"
 import { Rating, Image } from "semantic-ui-react"
 import { connect } from "react-redux"
 
+import { saveTrip, unsaveTrip, fetchSavedTrips } from "../actions"
+
 class TripCard extends Component {
+	componentDidMount() {
+		this.props.fetchSavedTrips()
+	}
+
+	isTripSaved = tripId => {
+		const { savedTrips } = this.props
+
+		if (savedTrips.indexOf(tripId) > -1) {
+			return (
+				<Rating
+					className="heart outline like icon"
+					rating={1}
+					onRate={this.handleSaveClick}
+				/>
+			)
+		} else {
+			return (
+				<Rating
+					className="heart outline like icon"
+					rating={0}
+					onRate={this.handleSaveClick}
+				/>
+			)
+		}
+	}
+
 	renderEditAndDeleteButtons = trip => {
-		if (this.props.renderEditAndDeleteButtons && trip._user === this.props.currentUserId) {
+		if (
+			this.props.renderEditAndDeleteButtons &&
+			trip._user === this.props.currentUserId
+		) {
 			return (
 				<div className="ui two buttons">
 					<Link to={`/trips/edit/${trip._id}`} className="ui blue basic button">
@@ -22,11 +53,19 @@ class TripCard extends Component {
 		}
 	}
 
+	handleSaveClick = (e, { rating }) => {
+		if (rating === 1) {
+			this.props.saveTrip(this.props.trip._id)
+		} else {
+			this.props.unsaveTrip(this.props.trip._id)
+		}
+	}
+
 	render() {
 		const { _id, title } = this.props.trip
 
 		return (
-			<div key={_id} className="card" style={{ padding: 10, minHeight: 70 }}>
+			<div className="card" style={{ padding: 10, minHeight: 70 }}>
 				<div className="content">
 					<Image
 						floated="right"
@@ -39,9 +78,7 @@ class TripCard extends Component {
 					<div className="description">Description</div>
 				</div>
 				<div className="content">
-					<span className="right floated">
-						<Rating className="heart outline like icon" />
-					</span>
+					<span className="right floated">{this.isTripSaved(_id)}</span>
 					<Rating icon="star" disabled maxRating={5} />
 					<div>23 Ratings</div>
 				</div>
@@ -55,8 +92,16 @@ class TripCard extends Component {
 
 const mapStateToProps = state => {
 	return {
-		currentUserId: state.auth._id
+		currentUserId: state.auth._id,
+		savedTrips: state.savedTrips
 	}
 }
 
-export default connect(mapStateToProps)(TripCard)
+export default connect(
+	mapStateToProps,
+	{
+		saveTrip,
+		unsaveTrip,
+		fetchSavedTrips
+	}
+)(TripCard)
