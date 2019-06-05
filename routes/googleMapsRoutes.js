@@ -19,5 +19,5 @@ module.exports = app => {
         })
 
 		res.send(places)
-    })
+	})
 }

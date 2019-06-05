@@ -2,6 +2,7 @@ import React, { Component } from "react"
 import { Link } from "react-router-dom"
 import { Rating, Image } from "semantic-ui-react"
 import { connect } from "react-redux"
+import faker from "faker"
 
 import { saveTrip, unsaveTrip, fetchSavedTrips } from "../actions"
 
@@ -27,6 +28,7 @@ class TripCard extends Component {
 					className="heart outline like icon"
 					rating={0}
 					onRate={this.handleSaveClick}
+					size="huge"
 				/>
 			)
 		}
@@ -62,25 +64,37 @@ class TripCard extends Component {
 	}
 
 	render() {
-		const { _id, title } = this.props.trip
+		const { _id, title, distance, duration } = this.props.trip
 
 		return (
 			<div className="card" style={{ padding: 10, minHeight: 70 }}>
 				<div className="content">
-					<Image
-						floated="right"
-						size="tiny"
-						src="https://react.semantic-ui.com/images/avatar/large/elliot.jpg"
-					/>
-					<Link to={`/trips/show/${_id}`}>
-						<h3 className="header item">{title}</h3>
-					</Link>
-					<div className="description">Description</div>
+					<div className="right floated ui label">
+						<em>{`Created by ${this.props.currentUserName}`}</em>
+					</div>
+					<div style={{ marginBottom: 30 }}>
+						<Link to={`/trips/show/${_id}`}>
+							<h3 className="header item">{title}</h3>
+						</Link>
+					</div>
+					<div className="ui label">
+						Duration
+						<div className="detail">{duration.text}</div>
+					</div>
+					<div className="ui label">
+						Duration
+						<div className="detail">{distance.text}</div>
+					</div>
 				</div>
 				<div className="content">
 					<span className="right floated">{this.isTripSaved(_id)}</span>
-					<Rating icon="star" disabled maxRating={5} />
-					<div>23 Ratings</div>
+					<Rating
+						icon="star"
+						disabled
+						rating={5}
+						maxRating={5}
+					/>
+					<div>{`${faker.random.number(50)} ratings`}</div>
 				</div>
 				<div className="extra content">
 					{this.renderEditAndDeleteButtons(this.props.trip)}
@@ -93,6 +107,7 @@ class TripCard extends Component {
 const mapStateToProps = state => {
 	return {
 		currentUserId: state.auth._id,
+		currentUserName: state.auth.currentUserName,
 		savedTrips: state.savedTrips
 	}
 }

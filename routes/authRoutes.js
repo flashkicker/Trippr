@@ -17,10 +17,13 @@ module.exports = app => {
 	)
 
 	app.get("/api/user", (req, res) => {
+		const { _id, firstName } = req.user
+		
 		if(req.user) {
 			res.send({
-				_id: req.user._id,
-				isSignedIn: true
+				_id,
+				isSignedIn: true,
+				firstName
 			})
 		} else {
 			res.send({

@@ -20,7 +20,7 @@ class CreateTrip extends Component {
 
 	render() {
 		return (
-			<div>
+			<div className="ui segment" style={{ marginBottom: 80 }}>
 				<h1 className="header item">Create a road trip</h1>
 				<TripForm onSubmit={this.onSubmit} />
 			</div>

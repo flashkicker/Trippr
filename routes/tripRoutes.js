@@ -1,4 +1,5 @@
 const mongoose = require("mongoose")
+const _ = require("lodash")
 const Trip = mongoose.model("trips")
 const User = mongoose.model("users")
 
@@ -12,12 +13,15 @@ module.exports = app => {
 	app.post("/api/trips", async (req, res) => {
 		const { title } = req.body
 		const stops = await extractStopsFromBody(req.body)
-
+		const { distance, duration } = await travelTimeAndDistanceCalculator(stops)
+		
 		const trip = new Trip({
 			title,
 			_user: req.user.id,
 			stops,
-			numberOfStops: stops.length - 2
+			numberOfStops: stops.length - 2,
+			distance,
+			duration
 		})
 
 		await trip.save()
@@ -33,7 +37,7 @@ module.exports = app => {
 
 	app.get("/api/mytrips", async (req, res) => {
 		const trips = await Trip.find({ _user: req.user.id })
-		
+
 		res.send(trips)
 	})
 
@@ -47,13 +51,22 @@ module.exports = app => {
 		const { title } = req.body
 		const _id = req.query.id
 		const stops = await extractStopsFromBody(req.body)
+		const { distance, duration } = await travelTimeAndDistanceCalculator(stops)
 
 		if (mongoose.Types.ObjectId.isValid(_id)) {
 			const updatedTrip = await Trip.findOneAndUpdate(
 				{
 					_id
 				},
-				{ $set: { title, stops, numberOfStops: stops.length - 2 } },
+				{
+					$set: {
+						title,
+						stops,
+						numberOfStops: stops.length - 2,
+						distance,
+						duration
+					}
+				},
 				{ new: true }
 			)
 
@@ -154,4 +167,29 @@ const extractStopsFromBody = async body => {
 	places.push(destination)
 
 	return await mapPlacesToCoordinates(places)
+}
+
+const travelTimeAndDistanceCalculator = async stops => {
+	let waypoints = ""
+
+	for (let i = 1; i < stops.length - 1; i++) {
+		waypoints = waypoints + "|via:" + stops[i].place
+	}
+
+	try {
+		const response = await googleMapsClient
+			.directions({
+				origin: stops[0].place,
+				destination: _.last(stops).place,
+				waypoints,
+				departure_time: "now"
+			})
+			.asPromise()
+
+		const { distance, duration } = response.json.routes[0].legs[0]
+
+		return { distance, duration }
+	} catch (e) {
+		console.log(e)
+	}
 }

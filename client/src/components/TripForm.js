@@ -27,7 +27,7 @@ class TripForm extends Component {
 	renderStopInput = formProps => {
 		const { input, label, meta } = formProps
 
-		const className = `field ${meta.error && meta.touched ? "error" : ""}`
+		const className = `ui form field ${meta.error && meta.touched ? "error" : ""}`
 
 		return (
 			<div className={className}>
@@ -37,6 +37,7 @@ class TripForm extends Component {
 					className={className}
 					type="text"
 					list="data"
+					style={{ marginBottom: '1em' }}
 					onChange={event => {
 						input.onChange(event)
 						let query = event.target.value
@@ -85,13 +86,13 @@ class TripForm extends Component {
 						component={this.renderStopInput}
 						key={stopsList.length + 1}
 					/>
-					<button
+					{/* <button
 						className="circular ui button info"
 						type="button"
 						onClick={this.renderCommentBox}
 					>
 						Add a comment about this stop
-					</button>
+					</button> */}
 				</div>
 			]
 		})
@@ -185,13 +186,13 @@ const validate = formValues => {
 		errors.title = "You must enter a title"
 	}
 
-	// if (!formValues.origin) {
-	// 	errors.origin = "You must enter an origin"
-	// }
+	if (!formValues.origin) {
+		errors.origin = "You must enter an origin"
+	}
 
-	// if (!formValues.destination) {
-	// 	errors.destination = "You must enter a destination"
-	// }
+	if (!formValues.destination) {
+		errors.destination = "You must enter a destination"
+	}
 
 	return errors
 }
