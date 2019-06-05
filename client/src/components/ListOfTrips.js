@@ -16,8 +16,7 @@ class ListOfTrips extends Component {
 
 	renderList = () => {
 		const trips = this.filterList(this.props.trips)
-		// console.log(trips)
-		// console.log(this.props.trip)
+		
 		return trips.map(trip => {
 			return (
 				<TripCard

@@ -70,7 +70,7 @@ class TripCard extends Component {
 					<Image
 						floated="right"
 						size="tiny"
-						src="https://react.semantic-ui.com/images/avatar/large/steve.jpg"
+						src="https://react.semantic-ui.com/images/avatar/large/elliot.jpg"
 					/>
 					<Link to={`/trips/show/${_id}`}>
 						<h3 className="header item">{title}</h3>
