@@ -2,8 +2,6 @@ import React, { Component } from "react"
 import { connect } from "react-redux"
 import { Button, Icon, Image, Rating } from "semantic-ui-react"
 import _ from "lodash"
-import faker from "faker"
-import { Responsive } from "semantic-ui-react"
 
 import { fetchTrip } from "../actions"
 
