@@ -2,7 +2,7 @@ import { FETCH_USER } from "../actions/types"
 
 const INITIAL_STATE = {
 	_id: null,
-	isSignedIn: null
+	isSignedIn: false
 }
 
 export default function(state = INITIAL_STATE, action) {

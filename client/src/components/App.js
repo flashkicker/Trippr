@@ -21,7 +21,7 @@ class App extends Component {
 
 	render() {
 		return (
-			<div className="ui container">
+			<div className="ui container" style={{ paddingBottom: 50 }}>
 				<Router history={history}>
 					<div>
 						<Header />

@@ -29,7 +29,7 @@ class ListOfTrips extends Component {
 	}
 
 	render() {
-		return <div className="ui two cards">{this.renderList()}</div>
+		return <div className="ui stackable two cards">{this.renderList()}</div>
 	}
 }
 

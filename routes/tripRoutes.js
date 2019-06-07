@@ -1,5 +1,6 @@
 const mongoose = require("mongoose")
 const _ = require("lodash")
+const faker = require("faker")
 const Trip = mongoose.model("trips")
 const User = mongoose.model("users")
 
@@ -14,14 +15,16 @@ module.exports = app => {
 		const { title } = req.body
 		const stops = await extractStopsFromBody(req.body)
 		const { distance, duration } = await travelTimeAndDistanceCalculator(stops)
-		
+
 		const trip = new Trip({
 			title,
 			_user: req.user.id,
 			stops,
 			numberOfStops: stops.length - 2,
 			distance,
-			duration
+			duration,
+			creatorName: req.user.firstName,
+			saves: 0
 		})
 
 		await trip.save()
@@ -32,19 +35,19 @@ module.exports = app => {
 	app.get("/api/trips", async (req, res) => {
 		const trips = await Trip.find().limit(20)
 
-		res.send(trips)
+		res.status(200).send(trips)
 	})
 
 	app.get("/api/mytrips", async (req, res) => {
 		const trips = await Trip.find({ _user: req.user.id })
 
-		res.send(trips)
+		res.status(200).send(trips)
 	})
 
 	app.get("/api/trip", async (req, res) => {
 		const trip = await Trip.find({ _id: req.query.id })
 
-		res.send(trip)
+		res.status(200).send(trip)
 	})
 
 	app.patch("/api/trip", async (req, res) => {
@@ -64,14 +67,15 @@ module.exports = app => {
 						stops,
 						numberOfStops: stops.length - 2,
 						distance,
-						duration
+						duration,
+						creatorName: req.user.firstName
 					}
 				},
 				{ new: true }
 			)
 
 			if (updatedTrip !== null) {
-				res.send(updatedTrip)
+				res.status(200).send(updatedTrip)
 			}
 		}
 	})
@@ -89,41 +93,69 @@ module.exports = app => {
 	app.post("/api/savetrip", async (req, res) => {
 		const _id = req.query.id
 
-		if (mongoose.Types.ObjectId.isValid(_id)) {
-			await User.findOneAndUpdate(
-				{
-					_id: req.user._id
-				},
-				{ $push: { savedTrips: _id } },
-				{ new: true }
-			)
-		}
+		try {
+			if (mongoose.Types.ObjectId.isValid(_id)) {
+				await User.findOneAndUpdate(
+					{
+						_id: req.user._id
+					},
+					{ $push: { savedTrips: _id } },
+					{ new: true }
+				)
 
-		res.sendStatus(200)
+				await Trip.findOneAndUpdate(
+					{ _id },
+					{ $inc: { saves: 1 } },
+					{ new: true }
+				)
+			}
+
+			res.sendStatus(200)
+		} catch (e) {
+			console.log(e)
+		}
 	})
 
 	app.post("/api/unsavetrip", async (req, res) => {
 		const _id = req.query.id
 
-		if (mongoose.Types.ObjectId.isValid(_id)) {
-			await User.findOneAndUpdate(
-				{
-					_id: req.user._id
-				},
-				{ $pull: { savedTrips: _id } },
-				{ new: true }
-			)
-		}
+		try {
+			if (mongoose.Types.ObjectId.isValid(_id)) {
+				await User.findOneAndUpdate(
+					{
+						_id: req.user._id
+					},
+					{ $pull: { savedTrips: _id } },
+					{ new: true }
+				)
 
-		res.sendStatus(200)
+				await Trip.findOneAndUpdate(
+					{ _id },
+					{ $inc: { saves: -1 } },
+					{ new: true }
+				)
+			}
+
+			res.sendStatus(200)
+		} catch (e) {
+			console.log(e)
+		}
 	})
 
 	app.get("/api/savedtrips", async (req, res) => {
-		const trips = await User.find({
-			_id: req.user._id
-		})
+		try {
+			if (req.user) {
+				const trips = await User.find({
+					_id: req.user._id
+				})
 
-		res.send(trips[0].savedTrips)
+				res.status(202).send(trips[0].savedTrips)
+			} else {
+				res.sendStatus(200)
+			}
+		} catch (e) {
+			console.log(e)
+		}
 	})
 }
 
@@ -170,10 +202,12 @@ const extractStopsFromBody = async body => {
 }
 
 const travelTimeAndDistanceCalculator = async stops => {
-	let waypoints = ""
+	let waypoints = null
 
 	for (let i = 1; i < stops.length - 1; i++) {
-		waypoints = waypoints + "|via:" + stops[i].place
+		if (stops.length > 2) {
+			waypoints = waypoints + "|via:" + stops[i].place
+		}
 	}
 
 	try {

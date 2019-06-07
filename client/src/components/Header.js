@@ -12,7 +12,7 @@ class Header extends Component {
 					<div className="right menu">
 						<a href="/auth/google" className="item">
 							<i className="google icon" />
-							Sign In
+							Sign In WIth Google
 						</a>
 					</div>
 				)
@@ -52,7 +52,7 @@ class Header extends Component {
 
 	render() {
 		return (
-			<div className="ui menu" style={{ padding: 5, marginTop: 5 }}>
+			<div className="ui stackable container menu" style={{ padding: 5, marginTop: 5 }}>
 				<div className="header item">
 					<h1 className="ui header">Trippr</h1>
 				</div>
@@ -67,6 +67,7 @@ class Header extends Component {
 }
 
 function mapStateToProps(state) {
+	console.log(state)
 	return { auth: state.auth }
 }
 

@@ -17,9 +17,9 @@ module.exports = app => {
 	)
 
 	app.get("/api/user", (req, res) => {
-		const { _id, firstName } = req.user
-		
-		if(req.user) {
+		if (req.user._id) {
+			const { _id, firstName } = req.user
+
 			res.send({
 				_id,
 				isSignedIn: true,

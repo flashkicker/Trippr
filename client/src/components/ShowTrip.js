@@ -3,6 +3,7 @@ import { connect } from "react-redux"
 import { Button, Icon, Image, Rating } from "semantic-ui-react"
 import _ from "lodash"
 import faker from "faker"
+import { Responsive } from "semantic-ui-react"
 
 import { fetchTrip } from "../actions"
 
@@ -63,12 +64,18 @@ class ShowTrip extends Component {
 			return <div>Loading...</div>
 		}
 
-		const { title, distance, duration } = this.props.trip
+		const {
+			title,
+			distance,
+			duration,
+			creatorName,
+			saves
+		} = this.props.trip
 
 		return (
 			<div>
-				<div className="ui container" style={{ paddingLeft: 40, paddingRight: 40 }}>
-					<div className="ui right aligned two column very relaxed grid">
+				<div className="ui stackable container">
+					<div className="ui left aligned two column very relaxed stackable grid">
 						<div className="column">
 							<div className="ui relaxed items">
 								<div className="item">
@@ -76,11 +83,13 @@ class ShowTrip extends Component {
 								</div>
 								<div className="item">
 									<div className="ui label">
-										Duration
+										Road Time
 										<div className="detail">{duration.text}</div>
 									</div>
+								</div>
+								<div className="item">
 									<div className="ui label">
-										Duration
+										Distance
 										<div className="detail">{distance.text}</div>
 									</div>
 								</div>
@@ -98,27 +107,19 @@ class ShowTrip extends Component {
 							<div className="ui right floated grid" style={{ marginTop: 18 }}>
 								<div className="sixteen wide column">
 									<div className="ui label" style={{ marginBottom: 15 }}>
-										<em>{`Created by ${this.props.currentUserName}`}</em>
+										<em>{`Created by ${creatorName}`}</em>
 									</div>
 									<div className="item">
-										<Rating
-											maxRating={5}
-											rating={5}
-											size="huge"
-											icon="star"
-											disabled
-										/>
+										<Rating className="heart outline like icon" rating={1} />
+										{` ${saves} saves`}
 									</div>
-									<div className="item">{`${faker.random.number(
-										50
-									)} ratings`}</div>
 								</div>
 							</div>
 						</div>
 					</div>
 				</div>
-				<div className="ui container" style={{ padding: 40 }}>
-					<div className="ui two column very relaxed grid">
+				<div className="ui container">
+					<div className="ui two column very relaxed stackable grid">
 						<div className="column">
 							<div className="ui one cards">{this.renderList()}</div>
 						</div>

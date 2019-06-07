@@ -12,7 +12,9 @@ const tripSchema = new Schema({
     stops: [placesSchema],
     numberOfStops: Number,
     distance: Object,
-    duration: Object
+    duration: Object,
+    creatorName: String,
+    saves: Number
 })
 
 mongoose.model("trips", tripSchema)
