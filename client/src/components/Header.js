@@ -52,7 +52,10 @@ class Header extends Component {
 
 	render() {
 		return (
-			<div className="ui stackable container menu" style={{ padding: 5, marginTop: 5 }}>
+			<div
+				className="ui stackable container menu"
+				style={{ padding: 5, marginTop: 5 }}
+			>
 				<div className="header item">
 					<h1 className="ui header">Trippr</h1>
 				</div>
