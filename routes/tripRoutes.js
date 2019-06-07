@@ -33,7 +33,7 @@ module.exports = app => {
 	})
 
 	app.get("/api/trips", async (req, res) => {
-		const trips = await Trip.find().limit(20)
+		const trips = await Trip.find().limit(20).sort({ saves: -1 })
 
 		res.status(200).send(trips)
 	})

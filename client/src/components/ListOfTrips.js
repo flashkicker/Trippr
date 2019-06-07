@@ -14,9 +14,19 @@ class ListOfTrips extends Component {
 		return trips
 	}
 
+	compare = (a, b) => {
+		if (a.saves < b.saves) {
+			return 1
+		}
+		if (a.saves > b.saves) {
+			return -1
+		}
+		return 0
+	}
+
 	renderList = () => {
-		const trips = this.filterList(this.props.trips)
-		
+		const trips = this.filterList(this.props.trips).sort(this.compare)
+
 		return trips.map(trip => {
 			return (
 				<TripCard
