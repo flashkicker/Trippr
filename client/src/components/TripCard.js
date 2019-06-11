@@ -65,7 +65,6 @@ class TripCard extends Component {
 	}
 
 	handleSaveClick = (e, { rating }) => {
-		console.log("rating")
 		if (rating === 1) {
 			this.props.saveTrip(this.props.trip._id)
 		} else {
@@ -85,6 +84,7 @@ class TripCard extends Component {
 		} = this.props.trip
 
 		let stopsList = []
+		let stopsString = ''
 
 		if (stops) {
 			stopsList = stops.map(stop => {
@@ -92,14 +92,18 @@ class TripCard extends Component {
 			})
 		}
 
-		let stopsString = `${stopsList[0]} to ${_.last(stopsList)} via `
+		if (stopsList.length > 2) {
+			stopsString = `${stopsList[0]} to ${_.last(stopsList)} via `
 
-		for (let i = 1; i < stopsList.length - 1; i++) {
-			if (i === stopsList.length - 2) {
-				stopsString = stopsString + stopsList[i] + "."
-			} else {
-				stopsString = stopsString + stopsList[i] + " > "
+			for (let i = 1; i < stopsList.length - 1; i++) {
+				if (i === stopsList.length - 2) {
+					stopsString = stopsString + stopsList[i] + "."
+				} else {
+					stopsString = stopsString + stopsList[i] + " > "
+				}
 			}
+		} else {
+			stopsString = `${stopsList[0]} to ${_.last(stopsList)}. `
 		}
 
 		return (
