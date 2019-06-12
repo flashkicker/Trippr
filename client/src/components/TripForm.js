@@ -27,7 +27,9 @@ class TripForm extends Component {
 	renderStopInput = formProps => {
 		const { input, label, meta } = formProps
 
-		const className = `ui form field ${meta.error && meta.touched ? "error" : ""}`
+		const className = `ui form field ${
+			meta.error && meta.touched ? "error" : ""
+		}`
 
 		return (
 			<div className={className}>
@@ -37,7 +39,7 @@ class TripForm extends Component {
 					className={className}
 					type="text"
 					list="data"
-					style={{ marginBottom: '1em' }}
+					style={{ marginBottom: "1em" }}
 					onChange={event => {
 						input.onChange(event)
 						let query = event.target.value
@@ -46,7 +48,7 @@ class TripForm extends Component {
 						}
 					}}
 					onBlur={() => {
-						if(input.value) {
+						if (input.value && this.props.predictions) {
 							input.onBlur(this.props.predictions[0].description)
 						}
 					}}
@@ -135,7 +137,6 @@ class TripForm extends Component {
 	renderStopsList = () => {
 		const { stopsList } = this.state
 		// TODO render stop fields when editing
-		console.log(this.props.initialValues)
 		if (stopsList) {
 			this.props.getNumberOfStops(stopsList.length)
 			return <div>{this.state.stopsList.map(field => field)}</div>
@@ -145,6 +146,16 @@ class TripForm extends Component {
 	render() {
 		return (
 			<div>
+				<p>
+					<em>
+						Tip: When you've typed your location you can press Tab on your
+						keyboard or click anywhere outside the text field and the
+						autocomplete will take care of the rest.{" "}
+					</em>
+				</p>
+				<p>
+					<em>Example entries: "corvallis", "albany or", "portla".</em>
+				</p>
 				<form
 					onSubmit={this.props.handleSubmit(this.onSubmit)}
 					className="ui form error"
@@ -200,7 +211,7 @@ const validate = formValues => {
 const mapStateToProps = state => {
 	const predictions = []
 
-	state.predictions.map((prediction) => {
+	state.predictions.map(prediction => {
 		const { description, place_id } = prediction
 		return predictions.push({
 			description,
@@ -208,7 +219,7 @@ const mapStateToProps = state => {
 		})
 	})
 
-	return { 
+	return {
 		predictions
 	}
 }

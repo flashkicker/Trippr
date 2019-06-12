@@ -70,7 +70,6 @@ class Header extends Component {
 }
 
 function mapStateToProps(state) {
-	console.log(state)
 	return { auth: state.auth }
 }
 

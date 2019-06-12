@@ -25,6 +25,7 @@ class ExploreTrips extends Component {
 }
 
 const mapStateToProps = state => {
+	console.log(Object.values(state.trips))
 	return {
 		trips: Object.values(state.trips)
 	}

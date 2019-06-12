@@ -82,7 +82,7 @@ class TripCard extends Component {
 			creatorName,
 			saves
 		} = this.props.trip
-
+		console.log(duration)
 		let stopsList = []
 		let stopsString = ''
 
