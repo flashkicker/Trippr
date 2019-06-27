@@ -50,7 +50,7 @@ export const fetchTrips = () => {
 export const fetchTrip = id => {
 	return async dispatch => {
 		const response = await axios.get(`/api/trip/?id=${id}`)
-
+		console.log(response.data[0])
 		dispatch({
 			type: FETCH_TRIP,
 			payload: response.data[0]

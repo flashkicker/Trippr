@@ -1,12 +1,34 @@
 import React, { Component } from "react"
 import { connect } from "react-redux"
 import { Field, reduxForm } from "redux-form"
+import _ from "lodash"
 
 import { getPlacesSuggestions, getNumberOfStops } from "../actions"
 
 class TripForm extends Component {
 	state = {
 		stopsList: []
+	}
+
+	componentDidMount() {
+		const { numberOfStops, stops } = this.props.initialValues
+		console.log(this.props.initialValues)
+		if (numberOfStops > 0) {
+			let stopsList = stops.map((stop, index) => {
+				console.log(stop)
+				return (
+					<div key={index}>
+						<Field
+							label={`Stop ${index + 1}`}
+							name={`stop${index + 1}`}
+							component={this.renderStopInput}
+						/>
+					</div>
+				)
+			})
+			
+			this.setState({ stopsList })
+		}
 	}
 
 	onSubmit = formValues => {
@@ -81,12 +103,11 @@ class TripForm extends Component {
 		this.setState({
 			stopsList: [
 				...stopsList,
-				<div>
+				<div key={stopsList.length + 1}>
 					<Field
 						label={`Stop ${stopsList.length + 1}`}
 						name={`stop${stopsList.length + 1}`}
 						component={this.renderStopInput}
-						key={stopsList.length + 1}
 					/>
 					{/* <button
 						className="circular ui button info"
@@ -102,8 +123,7 @@ class TripForm extends Component {
 
 	removeInputField = () => {
 		const { stopsList } = this.state
-		stopsList.pop()
-		this.setState({ stopsList })
+		this.setState({ stopsList: _.without(stopsList, _.last(stopsList)) })
 	}
 
 	renderRemoveButton = () => {
@@ -136,11 +156,12 @@ class TripForm extends Component {
 
 	renderStopsList = () => {
 		const { stopsList } = this.state
+
 		// TODO render stop fields when editing
 		if (stopsList) {
 			this.props.getNumberOfStops(stopsList.length)
-			return <div>{this.state.stopsList.map(field => field)}</div>
 		}
+		return <div>{stopsList.map(field => field)}</div>
 	}
 
 	render() {
@@ -209,7 +230,9 @@ const validate = formValues => {
 }
 
 const mapStateToProps = state => {
+	const { stops } = state
 	const predictions = []
+	const initialValues = {}
 
 	state.predictions.map(prediction => {
 		const { description, place_id } = prediction
@@ -218,6 +241,10 @@ const mapStateToProps = state => {
 			place_id
 		})
 	})
+	console.log(state)
+	// for (let i = 1; i < stops.length - 2; i++) {
+	// 	initialValues[`stop${i}`] = stops[i].place
+	// }
 
 	return {
 		predictions

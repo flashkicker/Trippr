@@ -37,10 +37,10 @@ class Header extends Component {
 				return (
 					<div className="left menu">
 						<Link to="/trips/new" className="item">
-							Create
+							Create Trip
 						</Link>
 						<Link to="/trips/saved" className="item">
-							View Saved
+							Saved Trips
 						</Link>
 						<Link to="/trips/my" className="item">
 							My Trips
@@ -60,7 +60,7 @@ class Header extends Component {
 					<h1 className="ui header">Trippr</h1>
 				</div>
 				<Link to="/" className="item">
-					Explore
+					Explore Trips
 				</Link>
 				{this.renderTabs()}
 				{this.renderSignOutButton()}

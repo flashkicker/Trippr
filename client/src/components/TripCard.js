@@ -4,7 +4,7 @@ import { Rating } from "semantic-ui-react"
 import { connect } from "react-redux"
 import _ from "lodash"
 
-import { saveTrip, unsaveTrip, fetchSavedTrips } from "../actions"
+import { saveTrip, unsaveTrip, fetchSavedTrips, fetchTrips } from "../actions"
 
 class TripCard extends Component {
 	componentDidMount() {
@@ -67,8 +67,10 @@ class TripCard extends Component {
 	handleSaveClick = (e, { rating }) => {
 		if (rating === 1) {
 			this.props.saveTrip(this.props.trip._id)
+			this.props.fetchTrips()
 		} else {
 			this.props.unsaveTrip(this.props.trip._id)
+			this.props.fetchTrips()
 		}
 	}
 
@@ -82,7 +84,7 @@ class TripCard extends Component {
 			creatorName,
 			saves
 		} = this.props.trip
-		console.log(duration)
+
 		let stopsList = []
 		let stopsString = ''
 
@@ -156,6 +158,7 @@ export default connect(
 	{
 		saveTrip,
 		unsaveTrip,
-		fetchSavedTrips
+		fetchSavedTrips,
+		fetchTrips
 	}
 )(TripCard)

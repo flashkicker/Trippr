@@ -16,6 +16,8 @@ class EditTrip extends Component {
 			stops.push(formValues[`stop${i}`])
 		}
 
+		console.log(stops)
+
 		this.props.editTrip(this.props.match.params.id, {
 			...formValues,
 			stops
@@ -24,16 +26,18 @@ class EditTrip extends Component {
 
 	parseInitialValues = () => {
 		const { title, stops, numberOfStops } = this.props.trip
-		
+
 		let initialValues = {
 			title,
 			numberOfStops,
 			origin: stops[0].place,
-			destination: stops[stops.length - 1].place
+			destination: stops[stops.length - 1].place,
+			stops: []
 		}
 
 		if (stops.length > 2) {
 			for (let i = 1; i < stops.length - 1; i++) {
+				initialValues.stops.push(stops[i].place)
 				initialValues[`stop${i}`] = stops[i].place
 			}
 		}
@@ -47,14 +51,14 @@ class EditTrip extends Component {
 		}
 
 		return (
-			<div>
+			<div className="ui segment" style={{ marginBottom: 80 }}>
 				<h1 className="header item" style={{ marginBottom: 40 }}>
 					{`Editing Trip: ${this.props.trip.title}`}
-					<TripForm
-						initialValues={this.parseInitialValues()}
-						onSubmit={this.onSubmit}
-					/>
 				</h1>
+				<TripForm
+					initialValues={this.parseInitialValues()}
+					onSubmit={this.onSubmit}
+				/>
 			</div>
 		)
 	}
