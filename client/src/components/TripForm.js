@@ -2,6 +2,8 @@ import React, { Component } from "react"
 import { connect } from "react-redux"
 import { Field, reduxForm } from "redux-form"
 import _ from "lodash"
+import { AutoComplete as MUIAutoComplete } from "material-ui"
+import { AutoComplete } from "redux-form-material-ui"
 
 import { getPlacesSuggestions, getNumberOfStops } from "../actions"
 
@@ -11,23 +13,24 @@ class TripForm extends Component {
 	}
 
 	componentDidMount() {
-		const { numberOfStops, stops } = this.props.initialValues
-		console.log(this.props.initialValues)
-		if (numberOfStops > 0) {
-			let stopsList = stops.map((stop, index) => {
-				console.log(stop)
-				return (
-					<div key={index}>
-						<Field
-							label={`Stop ${index + 1}`}
-							name={`stop${index + 1}`}
-							component={this.renderStopInput}
-						/>
-					</div>
-				)
-			})
-			
-			this.setState({ stopsList })
+		if (this.props.initialValues) {
+			const { numberOfStops, stops } = this.props.initialValues
+
+			if (numberOfStops > 0) {
+				let stopsList = stops.map((stop, index) => {
+					return (
+						<div key={index}>
+							<Field
+								label={`Stop ${index + 1}`}
+								name={`stop${index + 1}`}
+								component={this.renderStopInput}
+							/>
+						</div>
+					)
+				})
+
+				this.setState({ stopsList })
+			}
 		}
 	}
 
@@ -87,7 +90,9 @@ class TripForm extends Component {
 
 	renderInput = formProps => {
 		const { input, label, meta } = formProps
-		const className = `field ${meta.error && meta.touched ? "error" : ""}`
+		const className = `ui form field ${
+			meta.error && meta.touched ? "error" : ""
+		}`
 		return (
 			<div className={className}>
 				<label>{label}</label>
@@ -157,7 +162,6 @@ class TripForm extends Component {
 	renderStopsList = () => {
 		const { stopsList } = this.state
 
-		// TODO render stop fields when editing
 		if (stopsList) {
 			this.props.getNumberOfStops(stopsList.length)
 		}
@@ -169,13 +173,14 @@ class TripForm extends Component {
 			<div>
 				<p>
 					<em>
-						Tip: When you've typed your location you can press Tab on your
-						keyboard or click anywhere outside the text field and the
-						autocomplete will take care of the rest.{" "}
+						Tip:{" "}
+						<strong>
+							If you don't see autocomplete suggestions in a drop-down when
+							you've typed your location,{" "}
+						</strong>
+						you can press Tab on your keyboard or click anywhere outside the
+						text field and the autocomplete will take care of the rest.{" "}
 					</em>
-				</p>
-				<p>
-					<em>Example entries: "corvallis", "albany or", "portla".</em>
 				</p>
 				<form
 					onSubmit={this.props.handleSubmit(this.onSubmit)}
@@ -241,10 +246,6 @@ const mapStateToProps = state => {
 			place_id
 		})
 	})
-	console.log(state)
-	// for (let i = 1; i < stops.length - 2; i++) {
-	// 	initialValues[`stop${i}`] = stops[i].place
-	// }
 
 	return {
 		predictions

@@ -67,7 +67,7 @@ export const editTrip = (id, formValues) => {
 			payload: response.data
 		})
 
-		history.push("/")
+		history.push("/trips/my")
 	}
 }
 

@@ -24,11 +24,13 @@
 		"express": "^4.16.3",
 		"faker": "^4.1.0",
 		"lodash": "^4.17.11",
+		"material-ui": "^0.20.2",
 		"materialize-css": "^1.0.0-rc.2",
 		"mongoose": "^5.5.10",
 		"morgan": "^1.9.1",
 		"passport": "^0.4.0",
 		"passport-google-oauth20": "^1.0.0",
+		"redux-form-material-ui": "^4.3.4",
 		"staticmaps": "^1.1.2"
 	},
 	"devDependencies": {

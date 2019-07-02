@@ -47,14 +47,14 @@ class ShowTrip extends Component {
 		let markers = ""
 		let path = ""
 		const { stops } = this.props.trip
-		let url = `https://maps.googleapis.com/maps/api/staticmap?size=500x400&key=AIzaSyAZn7wclMHXGAiymldyKJn1qAdDM84vk5A&markers=markerstyles`
+		let url = `https://maps.googleapis.com/maps/api/staticmap?size=500x400&key=AIzaSyAZn7wclMHXGAiymldyKJn1qAdDM84vk5A&markers=size:mid`
 
 		for (let i = 0; i < stops.length; i++) {
 			markers = markers + "|" + stops[i].place
 			path = path + "|" + stops[i].place
 		}
 
-		return `${url}${markers}&path=color:0x0000ff|weight:5${path}`
+		return `${url}${markers}&path=color:0x0000ff80|weight:2|geodesic:true${path}`
 	}
 
 	render() {
@@ -62,13 +62,7 @@ class ShowTrip extends Component {
 			return <div>Loading...</div>
 		}
 
-		const {
-			title,
-			distance,
-			duration,
-			creatorName,
-			saves
-		} = this.props.trip
+		const { title, distance, duration, creatorName, saves } = this.props.trip
 
 		return (
 			<div>
@@ -123,6 +117,13 @@ class ShowTrip extends Component {
 						</div>
 						<div className="column">
 							<Image src={this.generateStaticMap()} />
+							{/* <iframe
+								frameBorder={0}
+								style={{ border: 0 }}
+								width={500}
+								height={400}
+								src={}
+							/> */}
 						</div>
 					</div>
 				</div>
