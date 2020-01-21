@@ -202,7 +202,7 @@ const extractStopsFromBody = async body => {
 }
 
 const travelTimeAndDistanceCalculator = async stops => {
-	let waypoints = null
+	let waypoints = ""
 
 	for (let i = 1; i < stops.length - 1; i++) {
 		if (stops.length > 2) {
@@ -220,6 +220,7 @@ const travelTimeAndDistanceCalculator = async stops => {
 			})
 			.asPromise()
 
+		// console.log(response.json.routes[0].legs[0])
 		const { distance, duration } = response.json.routes[0].legs[0]
 
 		return { distance, duration }

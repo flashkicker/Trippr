@@ -4,6 +4,7 @@ import { Button, Icon, Image, Rating } from "semantic-ui-react"
 import _ from "lodash"
 
 import { fetchTrip } from "../actions"
+import MapComponent from "./MapComponent"
 
 class ShowTrip extends Component {
 	componentDidMount() {
@@ -43,19 +44,19 @@ class ShowTrip extends Component {
 		return `${url}${waypoints}`
 	}
 
-	generateStaticMap = () => {
-		let markers = ""
-		let path = ""
-		const { stops } = this.props.trip
-		let url = `https://maps.googleapis.com/maps/api/staticmap?size=500x400&key=AIzaSyAZn7wclMHXGAiymldyKJn1qAdDM84vk5A&markers=size:mid`
+	// generateStaticMap = () => {
+	// 	let markers = ""
+	// 	let path = ""
+	// 	const { stops } = this.props.trip
+	// 	let url = `https://maps.googleapis.com/maps/api/staticmap?size=500x400&key=AIzaSyAZn7wclMHXGAiymldyKJn1qAdDM84vk5A&markers=size:mid`
 
-		for (let i = 0; i < stops.length; i++) {
-			markers = markers + "|" + stops[i].place
-			path = path + "|" + stops[i].place
-		}
-
-		return `${url}${markers}&path=color:0x0000ff80|weight:2|geodesic:true${path}`
-	}
+	// 	for (let i = 0; i < stops.length; i++) {
+	// 		markers = markers + "|" + stops[i].place
+	// 		path = path + "|" + stops[i].place
+	// 	}
+	// 	console.log(`${url}${markers}&path=color:0x0000ff80|weight:2|geodesic:true${path}`)
+	// 	return `${url}${markers}&path=color:0x0000ff80|weight:2|geodesic:true${path}`
+	// }
 
 	render() {
 		if (!this.props.trip) {
@@ -116,14 +117,7 @@ class ShowTrip extends Component {
 							<div className="ui one cards">{this.renderList()}</div>
 						</div>
 						<div className="column">
-							<Image src={this.generateStaticMap()} />
-							{/* <iframe
-								frameBorder={0}
-								style={{ border: 0 }}
-								width={500}
-								height={400}
-								src={}
-							/> */}
+							<MapComponent isMarkerShown stops={this.props.trip.stops} />
 						</div>
 					</div>
 				</div>

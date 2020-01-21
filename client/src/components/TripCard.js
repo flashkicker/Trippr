@@ -3,8 +3,20 @@ import { Link } from "react-router-dom"
 import { Rating } from "semantic-ui-react"
 import { connect } from "react-redux"
 import _ from "lodash"
+import { withStyles } from "@material-ui/styles"
 
 import { saveTrip, unsaveTrip, fetchSavedTrips, fetchTrips } from "../actions"
+
+const styles = {
+	hover: {
+		padding: "10px",
+		"&:hover": {
+			backgroundColor: "#edf6ff",
+			padding: "10px",
+			borderRadius: "5px"
+		}
+	}
+}
 
 class TripCard extends Component {
 	componentDidMount() {
@@ -49,16 +61,21 @@ class TripCard extends Component {
 			trip._user === this.props.currentUserId
 		) {
 			return (
-				<div className="ui two buttons">
-					<Link to={`/trips/edit/${trip._id}`} className="ui blue basic button">
-						Edit
-					</Link>
-					<Link
-						to={`/trips/delete/${trip._id}`}
-						className="ui basic red button"
-					>
-						Delete
-					</Link>
+				<div className="extra content">
+					<div className="ui two buttons">
+						<Link
+							to={`/trips/edit/${trip._id}`}
+							className="ui blue basic button"
+						>
+							Edit
+						</Link>
+						<Link
+							to={`/trips/delete/${trip._id}`}
+							className="ui basic red button"
+						>
+							Delete
+						</Link>
+					</div>
 				</div>
 			)
 		}
@@ -86,7 +103,7 @@ class TripCard extends Component {
 		} = this.props.trip
 
 		let stopsList = []
-		let stopsString = ''
+		let stopsString = ""
 
 		if (stops) {
 			stopsList = stops.map(stop => {
@@ -109,37 +126,39 @@ class TripCard extends Component {
 		}
 
 		return (
-			<div className="card" style={{ padding: 10, minHeight: 70 }}>
+			<div className="card" style={{ padding: 0, minHeight: 70 }}>
 				<div className="content">
-					<div className="right floated ui label">
-						<em>{`Created by ${creatorName}`}</em>
-					</div>
-					<div style={{ marginBottom: 30 }}>
-						<Link to={`/trips/show/${_id}`}>
-							<h3 className="header item">{title}</h3>
-							<div className="meta">{stopsString}</div>
-						</Link>
-					</div>
-					<div className="item">
-						<div className="ui label">
-							Road Time
-							<div className="detail">{duration.text}</div>
+					<Link to={`/trips/show/${_id}`}>
+						<div className={this.props.classes.hover}>
+							<div className="right floated ui label">
+								<em>{`Created by ${creatorName}`}</em>
+							</div>
+							<div style={{ marginBottom: 30 }}>
+								<h3 className="header item">{title}</h3>
+								<div className="meta">{stopsString}</div>
+							</div>
+							<div className="item">
+								<div className="ui label">
+									Road Time
+									<div className="detail">{duration.text}</div>
+								</div>
+							</div>
+							<div className="item">
+								<div className="ui label">
+									Distance
+									<div className="detail">{distance.text}</div>
+								</div>
+							</div>
 						</div>
-					</div>
-					<div className="item">
-						<div className="ui label">
-							Distance
-							<div className="detail">{distance.text}</div>
-						</div>
-					</div>
+					</Link>
 				</div>
 				<div className="content">
-					{this.isLoggedIn(_id)}
-					{` ${saves} saves`}
+					<div style={{ paddingLeft: 10 }}>
+						{this.isLoggedIn(_id)}
+						{` ${saves} saves`}
+					</div>
 				</div>
-				<div className="extra content">
-					{this.renderEditAndDeleteButtons(this.props.trip)}
-				</div>
+				{this.renderEditAndDeleteButtons(this.props.trip)}
 			</div>
 		)
 	}
@@ -153,12 +172,11 @@ const mapStateToProps = state => {
 	}
 }
 
-export default connect(
-	mapStateToProps,
-	{
-		saveTrip,
-		unsaveTrip,
-		fetchSavedTrips,
-		fetchTrips
-	}
-)(TripCard)
+const wrappedComponent = connect(mapStateToProps, {
+	saveTrip,
+	unsaveTrip,
+	fetchSavedTrips,
+	fetchTrips
+})(TripCard)
+
+export default withStyles(styles)(wrappedComponent)
