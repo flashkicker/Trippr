@@ -21,8 +21,8 @@ const MapComponent = compose(
 	withGoogleMap,
 	lifecycle({
 		componentDidMount() {
-			const DirectionsService = new google.maps.DirectionsService()
-			// console.log(_.last(this.props.stops).coordinates)
+            const DirectionsService = new google.maps.DirectionsService()
+            
 			const origin = this.props.stops[0].coordinates
 			const destination = _.last(this.props.stops).coordinates
 			let waypoints = []
@@ -33,8 +33,6 @@ const MapComponent = compose(
 					stopover: true
 				})
 			}
-
-			// console.log(waypoints)
 
 			DirectionsService.route(
 				{

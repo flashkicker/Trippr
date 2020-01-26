@@ -2,6 +2,16 @@ import React, { Component } from "react"
 import { connect } from "react-redux"
 import { Button, Icon, Image, Rating } from "semantic-ui-react"
 import _ from "lodash"
+import {
+	EmailShareButton,
+	EmailIcon,
+	WhatsappShareButton,
+	WhatsappIcon,
+	FacebookMessengerShareButton,
+	FacebookMessengerIcon
+} from "react-share"
+import { CopyToClipboard } from "react-copy-to-clipboard"
+import ReactTooltip from "react-tooltip"
 
 import { fetchTrip } from "../actions"
 import MapComponent from "./MapComponent"
@@ -9,6 +19,7 @@ import MapComponent from "./MapComponent"
 class ShowTrip extends Component {
 	componentDidMount() {
 		this.props.fetchTrip(this.props.match.params.id)
+		// console.log(this.props.history)
 	}
 
 	renderList() {
@@ -65,6 +76,8 @@ class ShowTrip extends Component {
 
 		const { title, distance, duration, creatorName, saves } = this.props.trip
 
+		const tripUrl = `http://trrippr.herokuapp.com${this.props.history.location.pathname}`
+
 		return (
 			<div>
 				<div className="ui stackable container">
@@ -102,9 +115,48 @@ class ShowTrip extends Component {
 									<div className="ui label" style={{ marginBottom: 15 }}>
 										<em>{`Created by ${creatorName}`}</em>
 									</div>
-									<div className="item">
+									<div className="item" style={{ marginBottom: 15 }}>
 										<Rating className="heart outline like icon" rating={1} />
 										{` ${saves} saves`}
+									</div>
+									<div className="item">
+										<FacebookMessengerShareButton
+											url={tripUrl}
+											style={{ marginRight: 10 }}
+										>
+											<FacebookMessengerIcon
+												size={40}
+												round
+												data-tip="Share via Facebook Messenger"
+											/>
+										</FacebookMessengerShareButton>
+										<EmailShareButton url={tripUrl} style={{ marginRight: 10 }}>
+											<EmailIcon size={40} round data-tip="Share via Email" />
+										</EmailShareButton>
+										<WhatsappShareButton
+											url={tripUrl}
+											style={{ marginRight: 10 }}
+										>
+											<WhatsappIcon
+												size={40}
+												round
+												data-tip="Share via WhatsApp"
+											/>
+										</WhatsappShareButton>
+										<CopyToClipboard
+											text={tripUrl}
+											onCopy={() => this.setState({ copied: true })}
+										>
+											<i
+												className="copy icon"
+												style={{
+													fontSize: 32,
+													verticalAlign: "bottom",
+													cursor: "pointer"
+												}}
+												data-tip="Copy to clipboard"
+											></i>
+										</CopyToClipboard>
 									</div>
 								</div>
 							</div>
@@ -122,6 +174,7 @@ class ShowTrip extends Component {
 					</div>
 				</div>
 				<div className="container" style={{ padding: 40 }} />
+				<ReactTooltip />
 			</div>
 		)
 	}
@@ -134,9 +187,6 @@ const mapStateToProps = (state, ownProps) => {
 	}
 }
 
-export default connect(
-	mapStateToProps,
-	{
-		fetchTrip
-	}
-)(ShowTrip)
+export default connect(mapStateToProps, {
+	fetchTrip
+})(ShowTrip)
